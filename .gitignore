@@ -336,3 +336,4 @@ ASALocalRun/
 .vscode/
 
 Code.NET-Core-Microservices/
+.DS_Store
