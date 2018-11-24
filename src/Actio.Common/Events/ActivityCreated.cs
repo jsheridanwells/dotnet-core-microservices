@@ -2,21 +2,16 @@ using System;
 
 namespace Actio.Common.Events
 {
-    public class ActivityCreated : IAuthenticatedEvent
+    public class ActivityCreated
     {
-
-        public Guid Id { get; set; }
-        public Guid UserId { get; set; }
-        public string Category { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedAt { get; }
-
-        protected ActivityCreated()
-        {
-        }
-
-        public ActivityCreated(Guid id, Guid userId, string category, string name, string description, DateTime createdAt)
+        public ActivityCreated(
+            Guid id,
+            Guid userId,
+            string category,
+            string name,
+            string description,
+            DateTime createdAt
+        )
         {
             Id = id;
             UserId = userId;
@@ -25,5 +20,12 @@ namespace Actio.Common.Events
             Description = description;
             CreatedAt = createdAt;
         }
+
+        public Guid Id { get; }
+        public Guid UserId { get; }
+        public string Category { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public DateTime CreatedAt { get; }
     }
 }
