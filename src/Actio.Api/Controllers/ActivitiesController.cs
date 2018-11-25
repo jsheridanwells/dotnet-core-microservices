@@ -18,6 +18,7 @@ namespace Actio.Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody] CreateActivity command)
         {
+            // working now
             try 
             {
                 command.Id = Guid.NewGuid();

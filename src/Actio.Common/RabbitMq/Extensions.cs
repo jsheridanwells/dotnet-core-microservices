@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.Instantiation;
 using RawRabbit.Pipe;
+using RawRabbit.Pipe.Middleware;
 
 namespace Actio.Common.RabbitMq
 {
@@ -15,14 +16,16 @@ namespace Actio.Common.RabbitMq
         public static Task WithCommandHandlerAsync<TCommand>(this IBusClient bus, ICommandHandler<TCommand> handler)
             where TCommand : ICommand
             => bus.SubscribeAsync<TCommand>(msg => handler.HandleAsync(msg),
-            ctx => ctx.UseConsumerConfiguration(cfg => 
-            cfg.FromDeclaredQueue(q => q.WithName(GetQueueName<TCommand>()))));
+            ctx => ctx.UseConsumeConfiguration(
+                q => q.WithConsumerTag(GetQueueName<TCommand>())
+            ));
         
         public static Task WithEventHandlerAsync<TEvent>(this IBusClient bus,
             IEventHandler<TEvent> handler) where TEvent : IEvent
             => bus.SubscribeAsync<TEvent>(msg => handler.HandleAsync(msg),
-                ctx => ctx.UseConsumerConfiguration(cfg => 
-                cfg.FromDeclaredQueue(q => q.WithName(GetQueueName<TEvent>()))));
+                ctx => ctx.UseConsumeConfiguration(
+                    q => q.WithConsumerTag(GetQueueName<TEvent>())
+                ));
 
         public static void AddRabbitMq(this IServiceCollection services, IConfiguration config)
         {
