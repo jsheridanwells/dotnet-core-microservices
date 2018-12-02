@@ -28,7 +28,8 @@ namespace Actio.Common.Services
             
             var webHostBuilder = WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(config)
-                .UseStartup<TStartup>();
+                .UseStartup<TStartup>()
+                .UseDefaultServiceProvider(options => options.ValidateScopes = false);
             
             return new HostBuilder(webHostBuilder.Build());
         }

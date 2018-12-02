@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Actio.Common.Commands;
+using Actio.Common.Mongo;
 using Actio.Common.RabbitMq;
+using Actio.Services.Actions.Domain.Repositories;
 using Actio.Services.Actions.Handlers;
+using Actio.Services.Actions.Repositories;
+using Actio.Services.Actions.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +33,11 @@ namespace Actio.Services.Actions
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddLogging();
+            services.AddMongoDb(Configuration);
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IActivityRepository, ActivityRepository>();
+            services.AddTransient<IDatabaseSeeder, CustomMongoSeeder>();
             services.AddRabbitMq(Configuration);
             services.AddTransient<ICommandHandler<CreateActivity>, CreateActivityHandler>();
         }
@@ -46,6 +55,7 @@ namespace Actio.Services.Actions
             }
 
             app.UseHttpsRedirection();
+            app.ApplicationServices.GetService<IDatabaseInitializer>().InitializeAsync();
             app.UseMvc();
         }
     }
